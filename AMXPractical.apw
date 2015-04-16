@@ -4,6 +4,7 @@
 <!-- Common Elements -->
 <!ELEMENT Identifier (#PCDATA)>
 <!ELEMENT Comments (#PCDATA)>
+<!ELEMENT MasterDirectory (#PCDATA)>
 <!ELEMENT CreationDate (#PCDATA)>
 
 <!-- Workspace Elements-->
@@ -42,15 +43,16 @@
 
 <!ELEMENT System  (  Identifier,
                  SysID,
-                 TransSerial?,
-                 TransModem?,
                  TransTCPIP?,
+                 TransSerial?,
+                 TransTCPIPEx?,
+                 TransSerialEx?,
+                 TransUSBEx?,
+                 TransVNMEx?,
                  VirtualNetLinxMasterFlag?,
-                 VNMRestoreIPSettings?,
                  VNMSystemID?,
                  VNMIPAddress?,
                  VNMMaskAddress?,
-                 IsAuthenticationEnabled?,
                  UserName?,
                  Password?,
                  Comments?,
@@ -59,18 +61,20 @@
 <!ATTLIST System
       IsActive   (true | false)   "false"
       Platform   (Axcess | Netlinx)   "Axcess"
-      Transport   (Serial | Modem | TCPIP) "Serial">
+      Transport   (Serial | Modem | TCPIP) "Serial"
+      TransportEx   (Serial | USB | TCPIP | VNM) "Serial">
 
 <!ELEMENT SysID (#PCDATA)>
 <!ELEMENT TransSerial (#PCDATA)>
-<!ELEMENT TransModem (#PCDATA)>
 <!ELEMENT TransTCPIP (#PCDATA)>
-<!ELEMENT VirtualNetLinxMasterFlag (#PCDATA)>
-<!ELEMENT VNMRestoreIPSettings (#PCDATA)>
+<!ELEMENT TransTCPIPEx (#PCDATA)>
+<!ELEMENT TransSerialEx (#PCDATA)>
+<!ELEMENT TransUSBEx (#PCDATA)>
+<!ELEMENT TransVNMEx (#PCDATA)>
 <!ELEMENT VNMSystemID (#PCDATA)>
 <!ELEMENT VNMIPAddress (#PCDATA)>
 <!ELEMENT VNMMaskAddress (#PCDATA)>
-<!ELEMENT IsAuthenticationEnabled (#PCDATA)>
+<!ELEMENT VirtualNetLinxMasterFlag (#PCDATA)>
 <!ELEMENT UserName (#PCDATA)>
 <!ELEMENT Password (#PCDATA)>
 
@@ -78,11 +82,12 @@
 <!ELEMENT File ( Identifier,
                FilePathName,
                Comments?,
+               MasterDirectory?,
                DeviceMap*,
                IRDB*)>
 
 <!ATTLIST File 
-       Type (Source | MasterSrc | Include | Module | AXB | IR | TPD | TP4 | TP5 | XDD | KPD | TKO | AMX_IR_DB | IRN_DB | Other | DUET | TOK | TKN | KPB ) "Other"
+       Type (Source | MasterSrc | Include | Module | AXB | IR | TPD | TP4 | TP5 | KPD | TKO | AMX_IR_DB | IRN_DB | Other | DUET | TOK | TKN | KPB | XDD ) "Other"
        CompileType (Axcess | Netlinx | None) "None"> 
 
 <!ELEMENT FilePathName	(#PCDATA)>
@@ -104,7 +109,7 @@
        <!ELEMENT Notes (#PCDATA)>
 ]>
 
-<Workspace CurrentVersion="3.3"><Identifier>AMXPractical</Identifier>
+<Workspace CurrentVersion="4.0"><Identifier>AMXPractical</Identifier>
 <CreateVersion>3.3</CreateVersion>
 <PJS_File></PJS_File>
 <PJS_ConvertDate></PJS_ConvertDate>
@@ -116,58 +121,59 @@
 <SalesOrder></SalesOrder>
 <PurchaseOrder></PurchaseOrder>
 <Comments></Comments>
-<System IsActive="true" Platform="Netlinx" Transport="TCPIP"><Identifier>Test System</Identifier>
+<System IsActive="true" Platform="Netlinx" Transport="TCPIP" TransportEx="TCPIP"><Identifier>Test System</Identifier>
 <SysID>0</SysID>
-<TransSerial>COM1,38400,8,None,1,None</TransSerial>
-<TransModem></TransModem>
 <TransTCPIP>157.182.14.212:1319:1:EVTestController::</TransTCPIP>
-<VirtualNetLinxMasterFlag>0</VirtualNetLinxMasterFlag>
-<VNMRestoreIPSettings>0.0.0.0:1319:1:::</VNMRestoreIPSettings>
+<TransSerial>COM1,38400,8,None,1,None</TransSerial>
+<TransTCPIPEx>157.182.14.212|1319|1|EVTestController||</TransTCPIPEx>
+<TransSerialEx>COM1|38400|8|None|1|None||</TransSerialEx>
+<TransUSBEx>|||||</TransUSBEx>
+<TransVNMEx>10.0.0.1|1</TransVNMEx>
+<VirtualNetLinxMasterFlag>false</VirtualNetLinxMasterFlag>
 <VNMSystemID>1</VNMSystemID>
 <VNMIPAddress>25.182.61.66</VNMIPAddress>
 <VNMMaskAddress>255.255.255.0</VNMMaskAddress>
-<IsAuthenticationEnabled>0</IsAuthenticationEnabled>
 <UserName></UserName>
 <Password></Password>
 <Comments></Comments>
 <File CompileType="None" Type="Other"><Identifier>connectorDetail_2.2</Identifier>
-<FilePathName>..\ALL_ProgrammerII_Practical_Files_ZIP\connectorDetail_2.2.bmp</FilePathName>
+<FilePathName>ALL_ProgrammerII_Practical_Files_ZIP\connectorDetail_2.2.bmp</FilePathName>
 <Comments></Comments>
+<MasterDirectory>\</MasterDirectory>
 </File>
 <File CompileType="None" Type="Other"><Identifier>controlSingleLines_2.2</Identifier>
-<FilePathName>..\ALL_ProgrammerII_Practical_Files_ZIP\controlSingleLines_2.2.bmp</FilePathName>
+<FilePathName>ALL_ProgrammerII_Practical_Files_ZIP\controlSingleLines_2.2.bmp</FilePathName>
 <Comments></Comments>
+<MasterDirectory>\</MasterDirectory>
 </File>
 <File CompileType="None" Type="Other"><Identifier>Device Specification 2_2</Identifier>
-<FilePathName>..\ALL_ProgrammerII_Practical_Files_ZIP\Device Specification 2_2.pdf</FilePathName>
+<FilePathName>ALL_ProgrammerII_Practical_Files_ZIP\Device Specification 2_2.pdf</FilePathName>
 <Comments></Comments>
+<MasterDirectory>\</MasterDirectory>
 </File>
 <File CompileType="None" Type="Other"><Identifier>EMU_README</Identifier>
-<FilePathName>..\ALL_ProgrammerII_Practical_Files_ZIP\EMU_README.TXT</FilePathName>
+<FilePathName>ALL_ProgrammerII_Practical_Files_ZIP\EMU_README.TXT</FilePathName>
 <Comments></Comments>
-</File>
-<File CompileType="None" Type="TP4"><Identifier>Programmer Practical TP File</Identifier>
-<FilePathName>..\ALL_ProgrammerII_Practical_Files_ZIP\Programmer Practical TP File.TP4</FilePathName>
-<Comments></Comments>
-<DeviceMap DevAddr="dvTP_Main"><DevName>dvTP_Main</DevName>
-</DeviceMap>
+<MasterDirectory>\</MasterDirectory>
 </File>
 <File CompileType="None" Type="Other"><Identifier>System Requirements</Identifier>
-<FilePathName>..\ALL_ProgrammerII_Practical_Files_ZIP\System Requirements.pdf</FilePathName>
+<FilePathName>ALL_ProgrammerII_Practical_Files_ZIP\System Requirements.pdf</FilePathName>
 <Comments></Comments>
+<MasterDirectory>\</MasterDirectory>
 </File>
 <File CompileType="None" Type="Other"><Identifier>VideoFlow_2.2</Identifier>
-<FilePathName>..\ALL_ProgrammerII_Practical_Files_ZIP\VideoFlow_2.2.bmp</FilePathName>
+<FilePathName>ALL_ProgrammerII_Practical_Files_ZIP\VideoFlow_2.2.bmp</FilePathName>
 <Comments></Comments>
+<MasterDirectory>\</MasterDirectory>
 </File>
 <File CompileType="Netlinx" Type="Module"><Identifier>CameraControl</Identifier>
 <FilePathName>CameraControl.axs</FilePathName>
 <Comments></Comments>
 </File>
-<File CompileType="None" Type="IR"><Identifier>DIRECTv8_DISCRETES</Identifier>
+<File CompileType="Netlinx" Type="IR"><Identifier>DIRECTv8_DISCRETES</Identifier>
 <FilePathName>DIRECTv8_DISCRETES.IRL</FilePathName>
 <Comments></Comments>
-<DeviceMap DevAddr="dvDirectTV"><DevName>dvDirectTV</DevName>
+<DeviceMap DevAddr="dvSatellite"><DevName>dvSatellite</DevName>
 </DeviceMap>
 </File>
 <File CompileType="Netlinx" Type="Module"><Identifier>DVDControl</Identifier>
@@ -186,6 +192,12 @@
 <FilePathName>MyLib.axi</FilePathName>
 <Comments></Comments>
 </File>
+<File CompileType="None" Type="TP4"><Identifier>Programmer Practical TP File</Identifier>
+<FilePathName>Programmer Practical TP File.TP4</FilePathName>
+<Comments></Comments>
+<DeviceMap DevAddr="dvTP_Main"><DevName>dvTP_Main</DevName>
+</DeviceMap>
+</File>
 <File CompileType="Netlinx" Type="Module"><Identifier>ProjectorControl</Identifier>
 <FilePathName>ProjectorControl.axs</FilePathName>
 <Comments></Comments>
@@ -197,6 +209,7 @@
 <File CompileType="None" Type="Other"><Identifier>Sony EVID100 Interface</Identifier>
 <FilePathName>Sony_EVID100_v1_0_2_dr1_0_0\Sony EVID100 Interface.doc</FilePathName>
 <Comments></Comments>
+<MasterDirectory>\</MasterDirectory>
 </File>
 <File CompileType="None" Type="DUET"><Identifier>Sony_EVID100_Comm_dr1_0_0</Identifier>
 <FilePathName>Sony_EVID100_v1_0_2_dr1_0_0\Sony_EVID100_Comm_dr1_0_0.jar</FilePathName>

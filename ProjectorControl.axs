@@ -114,22 +114,16 @@ DEFINE_EVENT
 		{
 		    //REMOVE_STRING(DATA.TEXT, "$23,$8C,$00,$04", 1)
 		    STACK_VAR CHAR temp [4]
-		    STACK_VAR LONG total,loop,index,exp,texp
+		    STACK_VAR LONG total,loop,index
 		    index = LENGTH_STRING(DATA.TEXT) - 1
-		    exp = 8
-		    FOR(loop = 4; loop > 0; loop--, index--)
+
+		    FOR(loop = LENGTH_STRING(DATA.TEXT); loop > 4; loop--)
 		    {
-			texp = exp
-			total = total + (($F0 BAND DATA.TEXT[index]) * fnPowerValue(16, texp))
-			exp--
-			
-			texp = exp
-			total = total + (($0F BAND DATA.TEXT[index]) * fnPowerValue(16, texp))
-			exp--
-			
-			println("'DATA.TEXT[index]-',ITOA(DATA.TEXT[index]),' BAND-',($F0 BAND DATA.TEXT[index]), ' ', ($0F BAND DATA.TEXT[index]),' total-',ITOA(total)")
+			temp = "temp, ITOA(HEXTOI(DATA.TEXT[loop]))"
+			println("'temp: ',temp")
 		    }
-		    total = total / 3600
+		    
+		    total = ATOI(temp) / 3600 //convert from seconds to hours
 		    println("'total->',ITOA(total)")
 		    SEND_COMMAND dvTP_Proj, "'^TXT-14,0,', ITOA(total)"
 		}

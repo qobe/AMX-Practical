@@ -18,7 +18,7 @@ DEFINE_FUNCTION println(CHAR str [])
     SEND_STRING 0, "str"
 }
 
-DEFINE_FUNCTION fnOpenTCPConnect(DEV dvIP, CHAR IP4_ADDRESS[15], LONG IP_PORT)
+DEFINE_FUNCTION fnOpenTCPConnect(DEV dvIP, CHAR IP4_ADDRESS[15], LONG IP_PORT) //do nothing is device is communicating. reconnect if not
 {
     IF(![dvIP, DEVICE_COMMUNICATING])
     {
@@ -26,7 +26,7 @@ DEFINE_FUNCTION fnOpenTCPConnect(DEV dvIP, CHAR IP4_ADDRESS[15], LONG IP_PORT)
     }
 }
 
-DEFINE_FUNCTION LONG fnGenCKS(CHAR strCode[])
+DEFINE_FUNCTION LONG fnGenCKS(CHAR strCode[]) //generate checksum
 {
     //($02, $00, $00, $00, $00, CKS) is calculated by adding all the bytes and taking the sum $02 + $00 + $00 + $00 + $00 = $02
     STACK_VAR INTEGER loop

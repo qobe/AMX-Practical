@@ -38,8 +38,8 @@ DEFINE_START
     dvdNavCodes[1] = "$24,$2A"	//Menu
     dvdNavCodes[2] = "$24,$2C"	//Arrow UP
     dvdNavCodes[3] = "$24,$2D"	//Down
-    dvdNavCodes[4] = "$24,$2E"	//Right
-    dvdNavCodes[5] = "$24,$2F"	//Left
+    dvdNavCodes[4] = "$24,$2F"	//Left
+    dvdNavCodes[5] = "$24,$2E"	//Right
     dvdNavCodes[6] = "$24,$2B"	//Select
     
     dvdPlayCodes[1] = "$20,$21"		//Play
@@ -57,7 +57,7 @@ DEFINE_EVENT
     {
 	PUSH:
 	{
-	    TO[BUTTON.INPUT]
+	    //TO[BUTTON.INPUT] //handle button visual state by checking status
 	    SEND_STRING dvDVD, "dvdPlayCodes[GET_LAST(dvdPlayButtons)], CR"
 	}
     }
@@ -68,7 +68,7 @@ DEFINE_EVENT
 	{
 	    IF(nDiskType == DVDMode)	//Navigation buttons should be disabled in CD mode
 	    {
-		TO[BUTTON.INPUT]
+		TO[BUTTON.INPUT] 
 		SEND_STRING dvDVD, "dvdNavCodes[GET_LAST(dvdNavButtons)], CR"
 	    }
 	    
@@ -88,19 +88,29 @@ DEFINE_EVENT
 	    SEND_COMMAND dvDVD, "'SET BAUD 9600,N,8,1'"
 	    SEND_COMMAND dvDVD, "'HSOFF'"
 	    TIMELINE_CREATE (TL_DVDPoll, lDVDPoll, LENGTH_ARRAY(lDVDPoll), TIMELINE_ABSOLUTE, TIMELINE_REPEAT)
-	}	
+	}
+	COMMAND:
+	{
+	    //popup selected
+	}
 	STRING:
 	{
-	    IF((FIND_STRING(DATA.TEXT, "$05",1) <> 1) && nDVDStatus)
+	    SEND_STRING 0, "'#1 -> ', DATA.TEXT" //diagnostic
+	    IF(FIND_STRING(DATA.TEXT, "$05",1) <> 1) //if device is not off ($05)
 	    {
+		SEND_STRING 0, "'#2 -> ', DATA.TEXT" //diagnostic
 		ON[nDVDStatus]
 		SELECT
 		{
-		    ACTIVE(FIND_STRING(DATA.TEXT, "$12,$05",1) == 1): PULSE[dvTP_DVD, dvdPlayButtons[4]] //Skip Fwd
-		    ACTIVE(FIND_STRING(DATA.TEXT, "$12,$04",1) == 1): PULSE[dvTP_DVD, dvdPlayButtons[5]] //Skip Rev
 		    ACTIVE(FIND_STRING(DATA.TEXT, "$11,$01",1) == 1): nDiskType = DVDMode 	//Disk Type inquiry response
 		    ACTIVE(FIND_STRING(DATA.TEXT, "$11,$02",1) == 1): nDiskType = CDMode
 		    ACTIVE(FIND_STRING(DATA.TEXT, "$11,$03",1) == 1): nDiskType = NoMode
+		    ACTIVE(FIND_STRING(DATA.TEXT, "$12,$01",1) == 1): ON[dvTP_DVD, dvdPlayButtons[1]] //Play
+		    ACTIVE(FIND_STRING(DATA.TEXT, "$12,$02",1) == 1): ON[dvTP_DVD, dvdPlayButtons[2]] //stop
+		    ACTIVE(FIND_STRING(DATA.TEXT, "$12,$03",1) == 1): ON[dvTP_DVD, dvdPlayButtons[3]] //pause
+		    ACTIVE(FIND_STRING(DATA.TEXT, "$12,$06",1) == 1): ON[dvTP_DVD, dvdPlayButtons[7]] //rev
+		    ACTIVE(FIND_STRING(DATA.TEXT, "$12,$07",1) == 1): ON[dvTP_DVD, dvdPlayButtons[6]] //ff
+		    //ACTIVE(FIND_STRING(DATA.TEXT, "$06",1) == 1): PULSE[dvTP_DVD, GET_LAST(dvdPlayButtons)] //valid command received, but no response code
 		}
 	    }
 	    ELSE
@@ -109,4 +119,6 @@ DEFINE_EVENT
 	    }
 	}
     }
+    
+
     

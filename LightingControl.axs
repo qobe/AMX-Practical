@@ -26,7 +26,9 @@ DEFINE_VARIABLE
     VOLATILE INTEGER sceneButtons [] = {30,31,32}
     NON_VOLATILE _LightScene lightingScenes [3]
     
-    #INCLUDE 'MyLib'
+#INCLUDE 'MyLib'
+
+
 
 DEFINE_EVENT
 
@@ -65,19 +67,38 @@ DEFINE_EVENT
 	}
     }
     
+    CHANNEL_EVENT[dvLighting, DEVICE_COMMUNICATING]
+    {
+	ON:
+	{
+	    println('Kill-a-Watt Dimmer is communicating')
+	}
+	OFF:
+	{
+	    println('Kill-a-Watt Dimmer is not communicating')
+	    fnOpenTCPConnect(dvLighting, LIGHTING_IP_ADDRESS, LIGHTING_PORT)
+	}
+    }
+    
     DATA_EVENT[dvLighting]
     {
+	ONERROR:
+	{
+	    println("'error: server=',ITOA(DATA.NUMBER)")
+	    fnOpenTCPConnect(dvLighting, LIGHTING_IP_ADDRESS, LIGHTING_PORT)
+	}
 	ONLINE:
 	{
 	    //When connection is established
+	    println('Kill-a-Watt Dimmer is online')
 	    ON[dvLighting, DEVICE_COMMUNICATING]
-	    println('Device is communicating')
 	}
 	OFFLINE:
 	{
+	    println('Kill-a-Watt Dimmer is offline')
 	    OFF[dvLighting, DEVICE_COMMUNICATING]
 	}
-	STRING:	//Provide feedback
+	STRING:	//Provide feedback, issues updating TP levels 12.12 and 12.13 when selecting presets (feedback too fast for system?)
 	{
 	    STACK_VAR INTEGER zone
 	    STACK_VAR INTEGER lvl
@@ -90,15 +111,7 @@ DEFINE_EVENT
 	    }
 	}
     }
-    
-    BUTTON_EVENT[dvTP_Lighting, 0]
-    {
-	PUSH:
-	{
-	    fnOpenTCPConnect(dvLighting, LIGHTING_IP_ADDRESS, LIGHTING_PORT)
-	}
-    }
-    
+
     BUTTON_EVENT[dvTP_Lighting, lowerDimButtons]
     {
 	PUSH:
@@ -109,6 +122,7 @@ DEFINE_EVENT
 	RELEASE:
 	{
 	    SEND_STRING dvLighting, "'STOPDIM,[1:',ITOA(GET_LAST(lowerDimButtons)),']',CR"
+	    SEND_COMMAND dvTP_Lighting, "'^TXT-10,0,'"
 	}
     }
     BUTTON_EVENT[dvTP_Lighting, raiseDimButtons]
@@ -121,6 +135,7 @@ DEFINE_EVENT
 	RELEASE:
 	{
 	    SEND_STRING dvLighting, "'STOPDIM,[1:',ITOA(GET_LAST(raiseDimButtons)),']',CR"
+	    SEND_COMMAND dvTP_Lighting, "'^TXT-10,0,'"
 	}
     }
     
@@ -128,7 +143,7 @@ DEFINE_EVENT
     {
 	PUSH:
 	{
-	    STACK_VAR INTEGER index, loop
+	    STACK_VAR INTEGER loop, index
 	    index = GET_LAST(sceneButtons)
 	    
 	    SEND_COMMAND dvTP_Lighting, "'^TXT-10,0,',lightingScenes[index].sceneName"
@@ -137,5 +152,6 @@ DEFINE_EVENT
 	    {
 		SEND_STRING dvLighting, "'FADEDIM,',ITOA(lightingScenes[index].zone[loop].lightIntensity),',',ITOA(lightingScenes[index].zone[loop].fadeTimer),',0,[1:',ITOA(loop),']',CR"
 	    }
+	    
 	}
     }

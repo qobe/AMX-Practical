@@ -51,7 +51,7 @@ DEFINE_EVENT
 	    STACK_VAR INTEGER index
 	    index = GET_LAST(presetButtons)
 	    SEND_COMMAND vdvCamera, "'CAMERAPRESET-',ITOA(index)"
-	    SEND_COMMAND vdvCamera, "'?CAMERAPRESET'"
+	    //SEND_COMMAND vdvCamera, "'?CAMERAPRESET'"
 	}
 	HOLD[20]:
 	{
@@ -81,8 +81,10 @@ DEFINE_EVENT
 	}
 	COMMAND:
 	{
-	    IF(FIND_STRING(DATA.TEXT, 'CAMERAPRESET',1))
+	    SEND_STRING 0, "'Data.txt camera A ', DATA.TEXT"
+	    IF(LENGTH_STRING(REMOVE_STRING(DATA.TEXT, 'CAMERAPRESET-',1)) > 0)
 	    {
+		SEND_STRING 0, "'Data.txt camera B', DATA.TEXT"
 		ON[dvTP_Camera, presetButtons[ATOI(DATA.TEXT)]]
 	    }
 	}
