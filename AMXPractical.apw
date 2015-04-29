@@ -219,6 +219,10 @@
 <FilePathName>SwitcherControl.axs</FilePathName>
 <Comments></Comments>
 </File>
+<File CompileType="Netlinx" Type="DUET"><Identifier>VirtualKeypad_dr1_0_0</Identifier>
+<FilePathName>VirtualKeypad_2_0_1\VirtualKeypad_dr1_0_0.jar</FilePathName>
+<Comments></Comments>
+</File>
 </System>
 </Project>
 </Workspace>
